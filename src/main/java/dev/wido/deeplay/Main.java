@@ -3,7 +3,7 @@ package dev.wido.deeplay;
 import dev.wido.deeplay.graph.WeightedGraph;
 import dev.wido.deeplay.searchers.DijkstraSearcher;
 import dev.wido.deeplay.vertices.IntVertex;
-import dev.wido.deeplay.vertices.VertexPair;
+import dev.wido.deeplay.vertices.VerticesPair;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +21,7 @@ public class Main {
             Optional.of(new IntVertex(1)), Optional.of(new IntVertex(2)), Optional.of(new IntVertex(1)), Optional.of(new IntVertex(1))
         );
 
-        var costMap = new HashMap<VertexPair, Integer>();
+        var costMap = new HashMap<VerticesPair, Integer>();
         var rows = 4;
         var cols = 4;
 
@@ -36,7 +36,7 @@ public class Main {
                 row + 1 < rows ? map.get(i + cols) : Optional.<IntVertex>empty()  // Below
             ).filter(Optional::isPresent)
              .map(Optional::get)
-             .forEach(v -> costMap.putIfAbsent(new VertexPair(map.get(fi).get(), v), v.value));
+             .forEach(v -> costMap.putIfAbsent(new VerticesPair(map.get(fi).get(), v), v.value));
         }
 
         var graph = new WeightedGraph<>(map, 4, 4, costMap);

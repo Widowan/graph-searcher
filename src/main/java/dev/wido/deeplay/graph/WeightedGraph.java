@@ -7,12 +7,12 @@ import java.util.*;
 import java.util.stream.Stream;
 
 public class WeightedGraph<T extends Vertex> implements Graph<T> {
-    private final List<Optional<T>> map;
+    private final List<? extends Optional<? extends T>> map;
     private final Map<VerticesPair, Integer> costMap;
     private final int rows;
     private final int cols;
 
-    public WeightedGraph(List<Optional<T>> map, int rows, int cols,
+    public WeightedGraph(List<? extends Optional<? extends T>> map, int rows, int cols,
                          Map<VerticesPair, Integer> costMap) {
         this.map = map;
         this.cols = cols;
@@ -20,7 +20,9 @@ public class WeightedGraph<T extends Vertex> implements Graph<T> {
         this.costMap = costMap;
     }
 
-    public WeightedGraph(List<List<Optional<T>>> map, Map<VerticesPair, Integer> costMap) {
+    // TODO: Test it
+    public WeightedGraph(List<? extends List<? extends Optional<? extends T>>> map,
+                         Map<VerticesPair, Integer> costMap) {
         this.rows = map.size();
         this.cols = map.get(0).size();
         if (map.stream().anyMatch(it -> it.size() != this.cols))
@@ -41,7 +43,7 @@ public class WeightedGraph<T extends Vertex> implements Graph<T> {
             col + 1 < cols ? map.get(idx + 1)    : Optional.<T>empty(), // Right
             row > 0        ? map.get(idx - cols) : Optional.<T>empty(), // Above
             row + 1 < rows ? map.get(idx + cols) : Optional.<T>empty()  // Below
-        ).filter(Optional::isPresent).map(Optional::get).toList();
+        ).filter(Optional::isPresent).map(Optional::get).map(it -> (T)it).toList();
     }
 
     @Override
@@ -54,6 +56,6 @@ public class WeightedGraph<T extends Vertex> implements Graph<T> {
     public Optional<T> get(int x, int y) {
         if (x >= cols || x < 0 || y < 0 || y >= rows)
             throw new IllegalArgumentException("Out of bounds access");
-        return map.get(y * cols + x);
+        return map.get(y * cols + x).map(it -> (T)it);
     }
 }

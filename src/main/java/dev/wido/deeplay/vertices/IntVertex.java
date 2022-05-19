@@ -1,6 +1,6 @@
 package dev.wido.deeplay.vertices;
 
-final public class IntVertex extends Vertex {
+public class IntVertex extends Vertex {
     public final int value;
 
     public IntVertex(int value) {

@@ -30,13 +30,13 @@ public class Main {
             var col = i % cols;
             final var fi = i;
             Stream.of(
-                col > 0        ? map.get(i - 1)    : Optional.<IntVertex>empty(), // Left
-                col + 1 < cols ? map.get(i + 1)    : Optional.<IntVertex>empty(), // Right
-                row > 0        ? map.get(i - cols) : Optional.<IntVertex>empty(), // Above
-                row + 1 < rows ? map.get(i + cols) : Optional.<IntVertex>empty()  // Below
-            ).filter(Optional::isPresent)
-             .map(Optional::get)
-             .forEach(v -> costMap.putIfAbsent(new VerticesPair(map.get(fi).get(), v), v.value));
+                    col > 0        ? map.get(i - 1)    : Optional.<IntVertex>empty(), // Left
+                    col + 1 < cols ? map.get(i + 1)    : Optional.<IntVertex>empty(), // Right
+                    row > 0        ? map.get(i - cols) : Optional.<IntVertex>empty(), // Above
+                    row + 1 < rows ? map.get(i + cols) : Optional.<IntVertex>empty()) // Below
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .forEach(v -> costMap.putIfAbsent(new VerticesPair(map.get(fi).get(), v), v.value));
         }
 
         var graph = new WeightedGraph<>(map, 4, 4, costMap);

@@ -32,9 +32,9 @@ public class WeightedGraph<T extends Vertex> implements Graph<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<T> getEdges(Vertex v) {
-        //noinspection SuspiciousMethodCalls
-        var idx = map.indexOf(Optional.of(v));
+        var idx = map.indexOf(Optional.of((T)v));
         if (idx == -1) throw new IllegalArgumentException("Vertex doesn't exists");
         var row = idx / rows;
         var col = idx % cols;
@@ -58,4 +58,12 @@ public class WeightedGraph<T extends Vertex> implements Graph<T> {
             throw new IllegalArgumentException("Out of bounds access");
         return map.get(y * cols + x).map(it -> (T)it);
     }
+
+    @SuppressWarnings("unchecked")
+    public Optional<Position> find(Vertex v) {
+        var idx = map.indexOf(Optional.of((T)v));
+        if (idx == -1) return Optional.empty();
+
+        return Optional.of(new Position(idx / rows, idx % cols));
+    };
 }

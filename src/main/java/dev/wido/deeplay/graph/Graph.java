@@ -12,4 +12,6 @@ public interface Graph<T extends Vertex> {
     OptionalInt costBetween(Vertex v1, Vertex v2);
 
     Optional<T> get(int x, int y);
+
+    Optional<Position> find(Vertex v);
 }

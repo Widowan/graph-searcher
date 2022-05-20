@@ -1,10 +1,12 @@
 package dev.wido.deeplay;
 
 import dev.wido.deeplay.graph.WeightedGraph;
+import dev.wido.deeplay.searchers.AStarSearcher;
 import dev.wido.deeplay.searchers.DijkstraSearcher;
 import dev.wido.deeplay.vertices.IntVertex;
 import dev.wido.deeplay.vertices.VerticesPair;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -40,8 +42,14 @@ public class Main {
         }
 
         var graph = new WeightedGraph<>(map, 4, 4, costMap);
-        var searcher = new DijkstraSearcher(graph);
+        var searcher = new AStarSearcher(graph);
         var result = searcher.search(0, 0, 3, 3);
         System.out.println(result);
+
+        var tracedPath = searcher.tracePath();
+        for (int i = 0; i < map.size(); i++) {
+            if (i % rows == 0) System.out.println();
+            System.out.printf(tracedPath.contains(map.get(i).get()) ? "X " : "_ ");
+        }
     }
 }

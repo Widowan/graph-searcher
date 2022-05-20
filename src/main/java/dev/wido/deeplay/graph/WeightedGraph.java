@@ -36,7 +36,7 @@ public class WeightedGraph<T extends Vertex> implements Graph<T> {
     public List<T> getEdges(Vertex v) {
         var idx = map.indexOf(Optional.of((T)v));
         if (idx == -1) throw new IllegalArgumentException("Vertex doesn't exists");
-        var row = idx / rows;
+        var row = idx / cols;
         var col = idx % cols;
         return Stream.of(
             col > 0        ? map.get(idx - 1)    : Optional.<T>empty(), // Left
@@ -64,6 +64,6 @@ public class WeightedGraph<T extends Vertex> implements Graph<T> {
         var idx = map.indexOf(Optional.of((T)v));
         if (idx == -1) return Optional.empty();
 
-        return Optional.of(new Position(idx / rows, idx % cols));
-    };
+        return Optional.of(new Position(idx / cols, idx % cols));
+    }
 }

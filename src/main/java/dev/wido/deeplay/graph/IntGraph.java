@@ -20,17 +20,18 @@ final public class IntGraph<T extends IntVertex> extends WeightedGraph<T> {
     {
         var costMap = new HashMap<VerticesPair, Integer>();
         for (int i = 0; i < map.size(); i++) {
-            var row = i / rows;
+            var row = i / cols;
             var col = i % cols;
-            final var fi = i;
-            Stream.of(
-                    col > 0        ? map.get(i - 1)    : Optional.<IntVertex>empty(), // Left
-                    col + 1 < cols ? map.get(i + 1)    : Optional.<IntVertex>empty(), // Right
-                    row > 0        ? map.get(i - cols) : Optional.<IntVertex>empty(), // Above
-                    row + 1 < rows ? map.get(i + cols) : Optional.<IntVertex>empty()) // Below
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .forEach(v -> costMap.putIfAbsent(new VerticesPair(map.get(fi).get(), v), v.value));
+            var cur = map.get(i);
+            if (cur.isPresent())
+                Stream.of(
+                        col > 0        ? map.get(i - 1)    : Optional.<IntVertex>empty(), // Left
+                        col + 1 < cols ? map.get(i + 1)    : Optional.<IntVertex>empty(), // Right
+                        row > 0        ? map.get(i - cols) : Optional.<IntVertex>empty(), // Above
+                        row + 1 < rows ? map.get(i + cols) : Optional.<IntVertex>empty()) // Below
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .forEach(v -> costMap.putIfAbsent(new VerticesPair(cur.get(), v), v.value));
         }
 
         return costMap;

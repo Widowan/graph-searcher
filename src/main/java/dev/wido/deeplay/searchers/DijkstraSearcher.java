@@ -19,7 +19,7 @@ public class DijkstraSearcher implements Searcher {
     }
 
     @Override
-    public synchronized long search(int startX, int startY, int targetX, int targetY) {
+    public synchronized OptionalLong search(int startX, int startY, int targetX, int targetY) {
         var optionalStart = graph.get(startX, startY); // graph.get(Input.getStartCoords()) ?
         var optionalTarget = graph.get(targetX, targetY);
         if (optionalStart.isEmpty() || optionalTarget.isEmpty())
@@ -51,7 +51,7 @@ public class DijkstraSearcher implements Searcher {
         var cost = pathCost.get(target);
         pathCost.clear();
         frontier.clear();
-        return cost;
+        return cost == null ? OptionalLong.empty() : OptionalLong.of(cost);
     }
 
     // Tracing path backwards
@@ -64,6 +64,7 @@ public class DijkstraSearcher implements Searcher {
 
         while (current != start) {
             current = cameFrom.get(current);
+            if (current == null) return List.of();
             path.add(current);
         }
 

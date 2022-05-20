@@ -5,6 +5,7 @@ import dev.wido.deeplay.graph.Position;
 import dev.wido.deeplay.vertices.Vertex;
 import dev.wido.deeplay.vertices.VertexPriorityPair;
 
+import java.util.OptionalLong;
 import java.util.function.BiFunction;
 
 public final class AStarSearcher extends DijkstraSearcher {
@@ -22,7 +23,7 @@ public final class AStarSearcher extends DijkstraSearcher {
 
     @Override
     @SuppressWarnings("OptionalGetWithoutIsPresent")
-    public synchronized long search(int startX, int startY, int targetX, int targetY) {
+    public synchronized OptionalLong search(int startX, int startY, int targetX, int targetY) {
         var optionalStart = graph.get(startX, startY);
         var optionalTarget = graph.get(targetX, targetY);
         if (optionalStart.isEmpty() || optionalTarget.isEmpty())
@@ -55,6 +56,6 @@ public final class AStarSearcher extends DijkstraSearcher {
         var cost = pathCost.get(target);
         pathCost.clear();
         frontier.clear();
-        return cost;
+        return cost == null ? OptionalLong.empty() : OptionalLong.of(cost);
     }
 }

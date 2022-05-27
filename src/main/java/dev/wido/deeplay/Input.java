@@ -11,21 +11,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-public class Input {
+public final class Input {
     private String race;
     private final HashMap<String, HashMap<Character, OptionalInt>> matchTable = new HashMap<>();
 
     public Input() {}
 
-    public InputResult get(List<String> args) throws IOException, URISyntaxException {
-        var field = args.get(0);
-        this.race   = args.get(1);
-        int cols    = Integer.parseInt(args.get(2));
-        int rows    = Integer.parseInt(args.get(3));
-        int startX  = Integer.parseInt(args.get(4));
-        int startY  = Integer.parseInt(args.get(5));
-        int targetX = Integer.parseInt(args.get(6));
-        int targetY = Integer.parseInt(args.get(7));
+    public List<Optional<IntVertex>> getField(InputParams params) throws IOException {
+        var field = params.field();
+        race = params.race();
 
         var propPath = getPropPath();
         var propFile = Files.newInputStream(propPath);
@@ -34,19 +28,40 @@ public class Input {
         props.load(propFile);
         fillMatchTable(field, props);
 
-        return new InputResult(processField(field), rows, cols, startX, startY, targetX, targetY);
+        return processField(field);
     }
 
-    private Path getPropPath() throws URISyntaxException {
-        var propPath = Paths.get(
-            new File(
-                Input.class.getProtectionDomain().getCodeSource().getLocation().toURI()
-            ).getParent() + "/config.properties");
+    public static InputParams unpackParams(List<String> args) {
+        if (args.size() != 8) throw new IllegalArgumentException("Illegal count of arguments");
+        try {
+            String field = args.get(0);
+            String race  = args.get(1);
+            int cols     = Integer.parseInt(args.get(2));
+            int rows     = Integer.parseInt(args.get(3));
+            int startX   = Integer.parseInt(args.get(4));
+            int startY   = Integer.parseInt(args.get(5));
+            int targetX  = Integer.parseInt(args.get(6));
+            int targetY  = Integer.parseInt(args.get(7));
+            return new InputParams(field, race, cols, rows, startX, startY, targetX, targetY);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error during argument parsing", e);
+        }
+    }
 
-        if (!Files.exists(propPath))
-            propPath = Paths.get("src/main/resources/config.properties");
+    private Path getPropPath() throws IOException {
+        try {
+            var propPath = Paths.get(
+                new File(
+                    Input.class.getProtectionDomain().getCodeSource().getLocation().toURI()
+                ).getParent() + "/config.properties");
 
-        return propPath;
+            if (!Files.exists(propPath))
+                propPath = Paths.get("src/main/resources/config.properties");
+
+            return propPath;
+        } catch (URISyntaxException e) {
+            throw new IOException(e.getMessage());
+        }
     }
 
     private void fillMatchTable(String field, Properties props) {
@@ -78,9 +93,10 @@ public class Input {
         return list;
     }
 
-    public record InputResult(
-        List<Optional<IntVertex>> map,
-        int rows,    int cols,
+    public record InputParams(
+        String field,
+        String race,
+        int cols,    int rows,
         int startX,  int startY,
         int targetX, int targetY
     ) {}

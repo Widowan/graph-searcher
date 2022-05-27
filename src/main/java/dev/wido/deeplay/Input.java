@@ -13,6 +13,7 @@ import java.util.*;
 
 public final class Input {
     private String race;
+    private Properties props;
     private final HashMap<String, HashMap<Character, OptionalInt>> matchTable = new HashMap<>();
 
     public Input() {}
@@ -21,12 +22,14 @@ public final class Input {
         var field = params.field();
         race = params.race();
 
-        var propPath = getPropPath();
-        var propFile = Files.newInputStream(propPath);
+        if (props == null) {
+            var propPath = getPropPath();
+            var propFile = Files.newInputStream(propPath);
+            props = new Properties();
+            props.load(propFile);
+        }
 
-        var props = new Properties();
-        props.load(propFile);
-        fillMatchTable(field, props);
+        fillMatchTable(field);
 
         return processField(field);
     }
@@ -64,7 +67,10 @@ public final class Input {
         }
     }
 
-    private void fillMatchTable(String field, Properties props) {
+    private void fillMatchTable(String field) {
+        if (props.keySet().stream().noneMatch(i -> i.toString().startsWith(race)))
+            throw new IllegalArgumentException("Race doesn't exists");
+
         matchTable.putIfAbsent(race, new HashMap<>());
 
         for (int i = 0; i < field.length(); i++) {

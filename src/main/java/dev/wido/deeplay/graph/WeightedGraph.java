@@ -20,17 +20,6 @@ public class WeightedGraph<T extends Vertex> implements Graph<T> {
         this.costMap = costMap;
     }
 
-    // TODO: Test it
-    public WeightedGraph(List<? extends List<? extends Optional<? extends T>>> map,
-                         Map<VerticesPair, Integer> costMap) {
-        this.rows = map.size();
-        this.cols = map.get(0).size();
-        if (map.stream().anyMatch(it -> it.size() != this.cols))
-            throw new IllegalArgumentException("List is not uniformly sized");
-        this.map = map.stream().flatMap(Collection::stream).toList();
-        this.costMap = costMap;
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public List<T> getEdges(Vertex v) {

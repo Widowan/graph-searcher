@@ -48,23 +48,6 @@ public final class Input {
         }
     }
 
-    // No anonymous tuples, once again
-    private List<Object> validateParams(List<String> args) throws IllegalArgumentException {
-        var list = new ArrayList<>(8);
-
-        try {
-            if (args.size() != 8) throw new Exception();
-            list.add(String.valueOf(args.get(0)));
-            list.add(String.valueOf(args.get(1)));
-            for (int i = 2; i < 7; i++)
-                list.add(Integer.parseInt(args.get(i)));
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid arguments or their count");
-        }
-
-        return list;
-    }
-
     private Path getPropPath() throws IOException {
         try {
             var propPath = Paths.get(

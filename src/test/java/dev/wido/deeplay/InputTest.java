@@ -19,7 +19,6 @@ class InputTest {
     );
 
     @Test
-    @Order(1)
     void unpackParams() {
         var args = new ArrayList<>(List.of("STWSWTPPTPTTPWPP", "Human", "4", "4", "0", "0", "3", "3"));
 
@@ -34,7 +33,6 @@ class InputTest {
     }
 
     @Test
-    @Order(2)
     @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     void getField() {
         var correctMap = Stream.of(

@@ -6,7 +6,7 @@ import dev.wido.deeplay.vertices.VerticesPair;
 import java.util.*;
 import java.util.stream.Stream;
 
-public class WeightedGraph<T extends Vertex> implements Graph<T> {
+abstract public class WeightedGraph<T extends Vertex> implements Graph<T> {
     private final List<? extends Optional<? extends T>> map;
     private final Map<VerticesPair, Integer> costMap;
     private final int rows;

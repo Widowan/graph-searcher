@@ -17,6 +17,7 @@ public class Solution {
         var result = searcher.search(input.startX(), input.startY(),
                                                   input.targetX(), input.targetY());
 
+//        Input.printPath(searcher.tracePath(), map, 4, 0, 0, 3, 3);
         return result.isPresent() ? result.getAsLong() : -1;
     }
 }

@@ -20,7 +20,7 @@ public class DijkstraSearcher implements Searcher {
 
     @Override
     public synchronized OptionalLong search(int startX, int startY, int targetX, int targetY) {
-        var optionalStart = graph.get(startX, startY); // graph.get(Input.getStartCoords()) ?
+        var optionalStart = graph.get(startX, startY);
         var optionalTarget = graph.get(targetX, targetY);
         if (optionalStart.isEmpty() || optionalTarget.isEmpty())
             throw new IllegalArgumentException("Either starting point or target doesn't exists");
@@ -58,14 +58,13 @@ public class DijkstraSearcher implements Searcher {
     @Override
     public synchronized List<Vertex> tracePath() {
         if (start == null || target == null) return List.of();
-        var current = target;
         var path = new ArrayList<Vertex>();
-        path.add(current);
 
+        var current = target;
         while (current != start) {
+            path.add(current);
             current = cameFrom.get(current);
             if (current == null) return List.of();
-            path.add(current);
         }
 
         path.add(start);

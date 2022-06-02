@@ -6,6 +6,11 @@ import dev.wido.deeplay.vertices.VertexPriorityPair;
 
 import java.util.*;
 
+/**
+ * @author Widowan
+ * Searcher that implements Dijkstra's searching algorithm.
+ * Used with some kind of {@link Graph} implementation.
+ */
 public class DijkstraSearcher implements Searcher {
     protected final PriorityQueue<VertexPriorityPair> frontier = new PriorityQueue<>();
     protected final HashMap<Vertex, Vertex> cameFrom  = new HashMap<>();
@@ -14,10 +19,29 @@ public class DijkstraSearcher implements Searcher {
     protected Vertex target = null;
     protected Vertex start  = null;
 
+    /**
+     * Instantiate new searcher object. Doesn't do any
+     * computations under the hood, so this is a cheap operation.
+     * @param graph graph to search on
+     */
     public DijkstraSearcher(Graph<? extends Vertex> graph) {
         this.graph = graph;
     }
 
+    // TODO: Test negatives on graph
+    /**
+     * Main method, do the searching. Expensive operation. <p>
+     * <em>Dijkstra doesn't support graphs with negative weights</em> and will throw.
+     * @param startX x coordinate of vertex to start searching from
+     * @param startY y coordinate of vertex to start searching from
+     * @param targetX x coordinate of vertex to search
+     * @param targetY y coordinate of vertex to search
+     * @return Optional value, containing None in case of target
+     *        not being found, or some value if found. Cannot be negative
+     * @throws IllegalArgumentException if either start or target vertex doesn't exist
+     * @throws IllegalStateException if cost during movement is found to be negative
+     */
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Override
     public synchronized OptionalLong search(int startX, int startY, int targetX, int targetY) {
         var optionalStart = graph.get(startX, startY);
@@ -38,7 +62,9 @@ public class DijkstraSearcher implements Searcher {
             if (current.equals(target)) break;
 
             for (var next : graph.getEdges(current)) {
-                // noinspection OptionalGetWithoutIsPresent; since we're getting it from edges
+                var costBetween = graph.costBetween(current, next).getAsInt();
+                if (costBetween < 0)
+                    throw new IllegalStateException("Negative cost");
                 var newCost = pathCost.get(current) + graph.costBetween(current, next).getAsInt();
                 if (!pathCost.containsKey(next) || newCost < pathCost.get(next)) {
                     pathCost.put(next, newCost);
@@ -55,6 +81,10 @@ public class DijkstraSearcher implements Searcher {
     }
 
     // Tracing path backwards
+    /**
+     * @return a list containing all the visited vertices ordered from first to last.
+     *        Uses {@link Collections#reverse(List)} under the hood, making it 2*O(n).
+     */
     @Override
     public synchronized List<Vertex> tracePath() {
         if (start == null || target == null) return List.of();

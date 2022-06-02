@@ -13,12 +13,12 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GenericSearcherTest {
+public class GenericSearcherTest {
     private Searcher clearSearcher;
     private Searcher wallSearcher;
     private Searcher deadSearcher;
 
-    private static final Function<Stream<Integer>, List<Optional<IntVertex>>> createMap =
+    public static final Function<Stream<Integer>, List<Optional<IntVertex>>> createMap =
         s -> s
             .skip(1)
             .map(v -> v != null
@@ -26,7 +26,7 @@ class GenericSearcherTest {
                 : Optional.<IntVertex>empty())
             .toList();
 
-    private static final List<Optional<IntVertex>> clearMap = createMap.apply(
+    public static final List<Optional<IntVertex>> clearMap = createMap.apply(
         Stream.of(null,
             0, 2, 2, 9,
             1, 9, 1, 9,
@@ -35,16 +35,16 @@ class GenericSearcherTest {
         )
     ); // 0, 1, 2, 6, 10, 14, 15
 
-    private static final List<Optional<IntVertex>> wallMap = createMap.apply(
+    public static final List<Optional<IntVertex>> wallMap = createMap.apply(
         Stream.of(null,
-            1   , 1   , null, null,
+            1   , 1   , null, 99  ,
             null, 1   , 1   , null,
-            null, null, 1   , 1   ,
-            null, null, null, 1
+            99  , null, 1   , 1   ,
+            99  , 99  , null, 1
         )
     ); // 0, 1, 5, 6, 10, 11, 15
 
-    private static final List<Optional<IntVertex>> deadMap = createMap.apply(
+    public static final List<Optional<IntVertex>> deadMap = createMap.apply(
         Stream.of(null,
             1   , 1   , 1   , 1,
             1   , 1   , 1   , 1,
@@ -53,7 +53,7 @@ class GenericSearcherTest {
         )
     ); // []
 
-    void setUp(Class<? extends Searcher> searcherClass)
+    public void setUp(Class<? extends Searcher> searcherClass)
             throws NoSuchMethodException, InvocationTargetException,
             InstantiationException, IllegalAccessException
     {

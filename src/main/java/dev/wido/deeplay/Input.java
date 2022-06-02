@@ -115,7 +115,7 @@ public final class Input {
             String ch;
             var v = map.get(i);
 
-            if (i % cols == 0) System.out.println();
+            if (i % cols == 0 && i != 0) System.out.println();
 
             if (i % cols == startX && i / cols == startY)
                 ch = "+ ";

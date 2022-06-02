@@ -1,12 +1,19 @@
 package dev.wido.deeplay;
 
+import dev.wido.deeplay.graph.IntGraph;
+import dev.wido.deeplay.searchers.AStarSearcher;
+import dev.wido.deeplay.searchers.GenericSearcherTest;
+import dev.wido.deeplay.searchers.Searcher;
 import dev.wido.deeplay.vertices.IntVertex;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -72,5 +79,70 @@ class InputTest {
                 )
             )
         );
+    }
+
+    @Test
+    void printPath() {
+        var originalOut = System.out;
+        var outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
+
+        Function<List<Optional<IntVertex>>, Void> setupSearcher = map -> {
+            outContent.reset();
+            var searcher = new AStarSearcher(new IntGraph<>(map, 4, 4));
+            searcher.search(0, 0, 3, 3);
+            Input.printPath(searcher.tracePath(), map,
+                4, 0, 0, 3, 3);
+            return null;
+        };
+
+        assertAll(
+            () -> assertDoesNotThrow(
+                () -> {
+                    setupSearcher.apply(GenericSearcherTest.clearMap);
+                    assertEquals(
+                        """
+                            + @ @ .\040
+                            . . @ .\040
+                            . . @ .\040
+                            . . @ -\040
+                            """,
+                        outContent.toString()
+                    );
+                }
+            ),
+
+            () -> assertDoesNotThrow(
+                () -> {
+                    setupSearcher.apply(GenericSearcherTest.wallMap);
+                    assertEquals(
+                        """
+                            + @ / .\040
+                            / @ @ /\040
+                            . / @ @\040
+                            . . / -\040
+                            """,
+                        outContent.toString()
+                    );
+                }
+            ),
+
+            () -> assertDoesNotThrow(
+                () -> {
+                    setupSearcher.apply(GenericSearcherTest.deadMap);
+                    assertEquals(
+                        """
+                            + . . .\040
+                            . . . .\040
+                            . . . /\040
+                            . . / -\040
+                            """,
+                        outContent.toString()
+                    );
+                }
+            )
+        );
+
+        System.setOut(originalOut);
     }
 }

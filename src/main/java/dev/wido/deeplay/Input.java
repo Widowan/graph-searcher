@@ -11,45 +11,66 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-public class Input {
+public final class Input {
     private String race;
+    private Properties props;
     private final HashMap<String, HashMap<Character, OptionalInt>> matchTable = new HashMap<>();
 
     public Input() {}
 
-    public InputResult get(List<String> args) throws IOException, URISyntaxException {
-        var field = args.get(0);
-        this.race   = args.get(1);
-        int cols    = Integer.parseInt(args.get(2));
-        int rows    = Integer.parseInt(args.get(3));
-        int startX  = Integer.parseInt(args.get(4));
-        int startY  = Integer.parseInt(args.get(5));
-        int targetX = Integer.parseInt(args.get(6));
-        int targetY = Integer.parseInt(args.get(7));
+    public List<Optional<IntVertex>> getField(InputParams params) throws IOException {
+        var field = params.field();
+        race = params.race();
 
-        var propPath = getPropPath();
-        var propFile = Files.newInputStream(propPath);
+        if (props == null) {
+            var propPath = getPropPath();
+            var propFile = Files.newInputStream(propPath);
+            props = new Properties();
+            props.load(propFile);
+        }
 
-        var props = new Properties();
-        props.load(propFile);
-        fillMatchTable(field, props);
+        fillMatchTable(field);
 
-        return new InputResult(processField(field), rows, cols, startX, startY, targetX, targetY);
+        return processField(field);
     }
 
-    private Path getPropPath() throws URISyntaxException {
-        var propPath = Paths.get(
-            new File(
-                Input.class.getProtectionDomain().getCodeSource().getLocation().toURI()
-            ).getParent() + "/config.properties");
-
-        if (!Files.exists(propPath))
-            propPath = Paths.get("src/main/resources/config.properties");
-
-        return propPath;
+    public static InputParams unpackParams(List<String> args) {
+        if (args.size() != 8) throw new IllegalArgumentException("Illegal count of arguments");
+        try {
+            String field = args.get(0);
+            String race  = args.get(1);
+            int cols     = Integer.parseInt(args.get(2));
+            int rows     = Integer.parseInt(args.get(3));
+            int startX   = Integer.parseInt(args.get(4));
+            int startY   = Integer.parseInt(args.get(5));
+            int targetX  = Integer.parseInt(args.get(6));
+            int targetY  = Integer.parseInt(args.get(7));
+            return new InputParams(field, race, cols, rows, startX, startY, targetX, targetY);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error during argument parsing", e);
+        }
     }
 
-    private void fillMatchTable(String field, Properties props) {
+    private Path getPropPath() throws IOException {
+        try {
+            var propPath = Paths.get(
+                new File(
+                    Input.class.getProtectionDomain().getCodeSource().getLocation().toURI()
+                ).getParent() + "/config.properties");
+
+            if (!Files.exists(propPath))
+                propPath = Paths.get("src/main/resources/config.properties");
+
+            return propPath;
+        } catch (URISyntaxException e) {
+            throw new IOException(e.getMessage());
+        }
+    }
+
+    private void fillMatchTable(String field) {
+        if (props.keySet().stream().noneMatch(i -> i.toString().startsWith(race)))
+            throw new IllegalArgumentException("Race doesn't exists");
+
         matchTable.putIfAbsent(race, new HashMap<>());
 
         for (int i = 0; i < field.length(); i++) {
@@ -78,9 +99,10 @@ public class Input {
         return list;
     }
 
-    public record InputResult(
-        List<Optional<IntVertex>> map,
-        int rows,    int cols,
+    public record InputParams(
+        String field,
+        String race,
+        int cols,    int rows,
         int startX,  int startY,
         int targetX, int targetY
     ) {}
@@ -93,7 +115,7 @@ public class Input {
             String ch;
             var v = map.get(i);
 
-            if (i % cols == 0) System.out.println();
+            if (i % cols == 0 && i != 0) System.out.println();
 
             if (i % cols == startX && i / cols == startY)
                 ch = "+ ";

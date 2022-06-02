@@ -6,7 +6,7 @@ import dev.wido.deeplay.vertices.VerticesPair;
 import java.util.*;
 import java.util.stream.Stream;
 
-public class WeightedGraph<T extends Vertex> implements Graph<T> {
+abstract public class WeightedGraph<T extends Vertex> implements Graph<T> {
     private final List<? extends Optional<? extends T>> map;
     private final Map<VerticesPair, Integer> costMap;
     private final int rows;
@@ -17,17 +17,6 @@ public class WeightedGraph<T extends Vertex> implements Graph<T> {
         this.map = map;
         this.cols = cols;
         this.rows = rows;
-        this.costMap = costMap;
-    }
-
-    // TODO: Test it
-    public WeightedGraph(List<? extends List<? extends Optional<? extends T>>> map,
-                         Map<VerticesPair, Integer> costMap) {
-        this.rows = map.size();
-        this.cols = map.get(0).size();
-        if (map.stream().anyMatch(it -> it.size() != this.cols))
-            throw new IllegalArgumentException("List is not uniformly sized");
-        this.map = map.stream().flatMap(Collection::stream).toList();
         this.costMap = costMap;
     }
 

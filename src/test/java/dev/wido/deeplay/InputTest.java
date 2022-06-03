@@ -3,13 +3,11 @@ package dev.wido.deeplay;
 import dev.wido.deeplay.graph.IntGraph;
 import dev.wido.deeplay.searchers.AStarSearcher;
 import dev.wido.deeplay.searchers.GenericSearcherTest;
-import dev.wido.deeplay.searchers.Searcher;
 import dev.wido.deeplay.vertices.IntVertex;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

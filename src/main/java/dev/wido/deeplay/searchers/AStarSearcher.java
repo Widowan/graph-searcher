@@ -2,6 +2,7 @@ package dev.wido.deeplay.searchers;
 
 import dev.wido.deeplay.graph.Graph;
 import dev.wido.deeplay.graph.Position;
+import dev.wido.deeplay.graph.WeightedGraph;
 import dev.wido.deeplay.vertices.Vertex;
 import dev.wido.deeplay.vertices.VertexPriorityPair;
 
@@ -23,7 +24,7 @@ public final class AStarSearcher extends DijkstraSearcher {
      * computations under the hood, so this is a cheap operation.
      * @param graph graph to search on
      */
-    public AStarSearcher(Graph<? extends Vertex> graph) {
+    public AStarSearcher(WeightedGraph<? extends Vertex> graph) {
         super(graph);
     }
 

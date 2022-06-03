@@ -6,11 +6,25 @@ import dev.wido.deeplay.vertices.VerticesPair;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+/**
+ * Type of weighted graph made specifically for the task. Used with IntVertex,
+ * uses symmetrical cost map generation.
+ * @param <T> Type of vertex to use, IntVertex or more concrete
+ */
 final public class IntGraph<T extends IntVertex> extends WeightedGraph<T> {
 
+    /**
+     * Create graph. Generates costMap instantly, so it is a costly operation.
+     * @param map vertex map as per
+     *       {@link WeightedGraph#WeightedGraph(List, int, int, Map)} WeightedGraph::new}
+     *       description
+     * @param rows number of rows graph has
+     * @param cols number of columns graph has
+     */
     public IntGraph(List<? extends Optional<? extends T>> map,
                     int rows, int cols) {
         super(map, rows, cols, createCostMap(map, rows, cols));

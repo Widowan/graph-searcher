@@ -1,6 +1,7 @@
 package dev.wido.deeplay.searchers;
 
 import dev.wido.deeplay.graph.Graph;
+import dev.wido.deeplay.graph.WeightedGraph;
 import dev.wido.deeplay.vertices.Vertex;
 import dev.wido.deeplay.vertices.VertexPriorityPair;
 
@@ -15,7 +16,7 @@ public class DijkstraSearcher implements Searcher {
     protected final PriorityQueue<VertexPriorityPair> frontier = new PriorityQueue<>();
     protected final HashMap<Vertex, Vertex> cameFrom  = new HashMap<>();
     protected final HashMap<Vertex, Integer> pathCost = new HashMap<>();
-    protected final Graph<? extends Vertex> graph;
+    protected final WeightedGraph<? extends Vertex> graph;
     protected Vertex target = null;
     protected Vertex start  = null;
 
@@ -24,7 +25,7 @@ public class DijkstraSearcher implements Searcher {
      * computations under the hood, so this is a cheap operation.
      * @param graph graph to search on
      */
-    public DijkstraSearcher(Graph<? extends Vertex> graph) {
+    public DijkstraSearcher(WeightedGraph<? extends Vertex> graph) {
         this.graph = graph;
     }
 

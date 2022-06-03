@@ -7,7 +7,7 @@ What's here:
 * Abstract graph structure (Graph <- WeightedGraph <- IntGraph)
 * Multiple types of vertices (Vertex <- IntVertex)
 * **Multiple searchers (namely A\* and Dijkstra)**
-* Unit-tests (w/ JUnit5)
+* Unit-tests (93% line coverage 😎)
 * Input parser that parser command line arguments
 * Fully JavaDoc documented code
 * **Additional task:** parse graph data from file - from config.properties 

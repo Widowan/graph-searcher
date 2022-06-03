@@ -2,6 +2,7 @@ package dev.wido.deeplay.searchers;
 
 import dev.wido.deeplay.graph.Graph;
 import dev.wido.deeplay.graph.IntGraph;
+import dev.wido.deeplay.graph.WeightedGraph;
 import dev.wido.deeplay.vertices.IntVertex;
 
 import java.lang.reflect.InvocationTargetException;
@@ -62,9 +63,9 @@ public class GenericSearcherTest {
         var deadGraph = new IntGraph<>(deadMap, 4, 4);
 
         // Initialize passed class, be it AStar, Dijkstra, ...
-        clearSearcher = searcherClass.getDeclaredConstructor(Graph.class).newInstance(clearGraph);
-        wallSearcher = searcherClass.getDeclaredConstructor(Graph.class).newInstance(wallGraph);
-        deadSearcher = searcherClass.getDeclaredConstructor(Graph.class).newInstance(deadGraph);
+        clearSearcher = searcherClass.getDeclaredConstructor(WeightedGraph.class).newInstance(clearGraph);
+        wallSearcher = searcherClass.getDeclaredConstructor(WeightedGraph.class).newInstance(wallGraph);
+        deadSearcher = searcherClass.getDeclaredConstructor(WeightedGraph.class).newInstance(deadGraph);
     }
 
     void searchClear() {

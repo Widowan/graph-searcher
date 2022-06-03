@@ -1,6 +1,7 @@
 package dev.wido.deeplay.graph;
 
 import dev.wido.deeplay.vertices.IntVertex;
+import dev.wido.deeplay.vertices.SortedVerticesPair;
 import dev.wido.deeplay.vertices.VerticesPair;
 
 import java.util.HashMap;
@@ -31,7 +32,7 @@ final public class IntGraph<T extends IntVertex> extends WeightedGraph<T> {
                         row + 1 < rows ? map.get(i + cols) : Optional.<IntVertex>empty()) // Below
                     .filter(Optional::isPresent)
                     .map(Optional::get)
-                    .forEach(v -> costMap.putIfAbsent(new VerticesPair(cur.get(), v), v.value));
+                    .forEach(v -> costMap.putIfAbsent(new SortedVerticesPair(cur.get(), v), v.value));
         }
 
         return costMap;

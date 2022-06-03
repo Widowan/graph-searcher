@@ -1,5 +1,6 @@
 package dev.wido.deeplay.graph;
 
+import dev.wido.deeplay.vertices.SortedVerticesPair;
 import dev.wido.deeplay.vertices.Vertex;
 import dev.wido.deeplay.vertices.VerticesPair;
 
@@ -37,7 +38,7 @@ abstract public class WeightedGraph<T extends Vertex> implements Graph<T> {
 
     @Override
     public OptionalInt costBetween(Vertex v1, Vertex v2) {
-        var c = costMap.get(new VerticesPair(v1, v2));
+        var c = costMap.get(new SortedVerticesPair(v1, v2));
         return c != null ? OptionalInt.of(c) : OptionalInt.empty();
     }
 

@@ -1,6 +1,6 @@
 ## Java graph searcher
 Made for Deeplay 2022 internship, this repo contains solution
-for [the task](https://internship.deeplay.io/java).
+for [the task](https://internship.deeplay.io/java) ([pdf (ru)](https://www.pdfhost.net/index.php?Action=Download&File=5b07136bc671440f4752574013a000f2)).
 
 What's here:
 * Required `Solution` class
